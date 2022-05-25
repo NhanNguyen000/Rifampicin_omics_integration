@@ -1,0 +1,6 @@
+file	input_types	total_genes/proteins	annotation_status	num_existed_TFs	number_both_TF_target	number_traceback_TFs	number_top_traceback_TFs
+1	RNAseq_DEgene_toProtein_Rif_The_geneNames.txt	Protein	582	Do not need further annotation	2	2	431	22
+2	RNAseq_DEgene_toProtein_Rif_Tox_geneNames.txt	Protein	471	Do not need further annotation	2	2	423	21
+3	RNAseq_Rif_The_DEgeneNames.txt	RNAseq	4716	Do not need further annotation	126	124	575	28
+4	RNAseq_Rif_Tox_DEgeneNames.txt	RNAseq	3493	Do not need further annotation	95	94	555	27
+Number of acrossed TFs	NA	NA	NA	NA	1	0	3	0
