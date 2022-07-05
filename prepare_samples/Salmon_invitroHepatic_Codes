@@ -29,7 +29,7 @@ done
 
 
 # run Salmon v1.5.2w with Homo_sapiens.GRCh38.cdna.all refference release 104 for drugs except 5-FU
-for drug in Acetaminophen Acetaminophen_no_control Azathioprine Azathioprine_no_control Cyclosporin Diclofenac Isoniazid Methotrexate Phenytoin Rifampicin Valproic_Acid
+for drug in Rifampicin
 
 do
 
