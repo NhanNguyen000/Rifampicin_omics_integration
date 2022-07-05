@@ -1,0 +1,60 @@
+#!/bin/bash
+## This script uses  BWA version 0.7.17, Samtools version 1.10 and Human genome golden path Hg38
+## This srcipt run for EPI in cardiac tissue
+
+## Outline of the script:
+# 1. Set path to the tools, parameters, input, output
+# 2. Run FastQC on the raw data --?
+# 3. Run the BWA alignment
+# 4. Convert .sam to .bam files and index .bam files using Samtools
+
+##-----------------------------------------------------------------------------
+
+## 1. Set path to the tools, parameters, input, output:
+# Tools in ngs-ada:
+bwa_path=/share/tools/bwa-v0.7.17/
+#samtools_path=/share/tools/samtools-1.9/
+samtools_path=/share/analysis/BReIN/MethylDackel/samtools-1.10/
+
+# Dowload the human genome reference:
+#cd /ngs-data/analysis/hecatos/NhanNguyen/Genome/bwa_genome/
+#wget http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz
+#gunzip hg38.fa.gz
+#bwa index -p hg38bwaidx -a bwtsw hg38.fa
+
+genome_reference=/ngs-data/analysis/hecatos/NhanNguyen/Genome/bwa_genome/hg38bwaidx
+
+# Input:
+# MeDIP data:
+data_dir=/ngs-data/data/hecatos/Medip_temp/
+sequence_number=$(seq 1186 1 1188; seq 1198 1 1203; seq 1219 1 1224)
+
+# Output:
+output_dir=/ngs-data-2/analysis/NhanNguyen/MeDIP/Hepatic
+
+##-----------------------------------------------------------------------------
+echo -n "Start BWA alignment: "; date
+cd ${output_dir}
+
+for i in ${sequence_number}
+do
+cp ${data_dir}*Rifampicin*${i}*.fastq.gz ${output_dir}
+ls *.fastq.gz
+cd ${output_dir}
+
+## Run the BWA alignment for pair-end samples
+echo -n "Start BWA alignment: "; date
+${bwa_path}bwa aln -t 4 ${genome_reference} *Rifampicin*${i}*_R1_001.fastq.gz > Rifampicin_${i}_R1.sai
+${bwa_path}bwa aln -t 4 ${genome_reference} *Rifampicin*${i}*_R2_001.fastq.gz > Rifampicin_${i}_R2.sai
+${bwa_path}bwa sampe ${genome_reference} Rifampicin_${i}_R1.sai Rifampicin_${i}_R2.sai *Rifampicin*${i}*_R1_001.fastq.gz *Rifampicin*${i}*_R2_001.fastq.gz > Rifampicin_${i}_pe.sam
+
+## Convert .sam to .bam files and index .bam files using Samtools
+echo -n "Start converting using samtools: "; date
+cd ${output_dir}
+${samtools_path}samtools view -bS Rifampicin_${i}_pe.sam > Rifampicin_${i}_pe.bam
+${samtools_path}samtools sort -O bam -o Rifampicin_${i}_pe.sorted.bam -T temp Rifampicin_${i}_pe.bam
+${samtools_path}samtools index Rifampicin_${i}_pe.sorted.bam
+echo -n "Finish at: "; date
+done
+
+#rm *.fastq.gz
