@@ -1,0 +1,36 @@
+#!/bin/bash
+## This script uses FastQC version 0.11.7
+# Add the permission for the FastQC (only need to do once time)
+#cd /share/tools/FastQC-0.11.7/ # for ngs-calc
+#cd /home/nnguyen/Tools/FastQC-0.11.7/ # for ngs-ada
+#ls -al
+#chmod 755 fastqc
+#ls -al
+fastqc=/share/tools/FastQC-0.11.7/fastqc
+CPU=15
+
+# run FastQC for control and drugs except 5-FU:
+for drug in Con_0.1_DMSO Rifampicin
+
+do
+
+data_dir=/ngs-data/data/hecatos/Hepatic/${drug}/TotalRNA/concatenated
+mkdir /ngs-data/analysis/hecatos/NhanNguyen/RNAseq_Salmon_Hepatic/${drug}/FastQC_RawData 
+fastqc_rawdata=/ngs-data/analysis/hecatos/NhanNguyen/RNAseq_Salmon_Hepatic/${drug}/FastQC_RawData
+
+echo -n "Start running FastQC for raw data: "; date
+echo -n "the total number data files:  "; ls ${data_dir} |wc -l
+${fastqc} -f fastq -t ${CPU} -o ${fastqc_rawdata} ${data_dir}/*.*
+
+done
+
+
+# run Fast QC for 5-FU:
+data_dir=/ngs-data/data/hecatos/Hepatic/5-FU/mRNA/concatenated
+mkdir /ngs-data/analysis/hecatos/NhanNguyen/RNAseq_Salmon_Hepatic/5-FU/FastQC_RawData 
+fastqc_rawdata=/ngs-data/analysis/hecatos/NhanNguyen/RNAseq_Salmon_Hepatic/5-FU/FastQC_RawData 
+
+echo -n "Start running FastQC for raw data: "; date
+echo -n "the total number data files:  "; ls ${data_dir} |wc -l
+${fastqc} -f fastq -t ${CPU} -o ${fastqc_rawdata} ${data_dir}/*.*
+
