@@ -1,0 +1,83 @@
+#!/bin/bash
+human_transcriptome=/ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/Homo_sapiens_GRch38_index/
+
+# run Salmon v1.5.2w with Homo_sapiens.GRCh38.cdna.all refference release 104 for control:
+for drug in Con_0.1_DMSO Con_UNTR
+
+do
+
+data_source=/ngs-data/data/hecatos/Hepatic/${drug}/TotalRNA/concatenated
+
+mkdir /ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/${drug}
+cd /ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/${drug}
+
+for i in ${data_source}/*.fastq.gz;
+do
+sample=`basename $i`
+if [ ! -d "${sample:0:13}_quant" ]; then
+echo "Processing sample ${sample:0:13}"
+/share/tools/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${human_transcriptome} \
+						-l A \
+						-1 ${data_source}/${sample:0:13}_R1_2.fastq.gz \
+						-2 ${data_source}/${sample:0:13}_R2_2.fastq.gz \
+						-p 8 --validateMappings \
+						-o ${sample:0:13}_quant
+fi
+done
+
+done
+
+
+# run Salmon v1.5.2w with Homo_sapiens.GRCh38.cdna.all refference release 104 for drugs except 5-FU
+for drug in Acetaminophen Acetaminophen_no_control Azathioprine Azathioprine_no_control Cyclosporin Diclofenac Isoniazid Methotrexate Phenytoin Rifampicin Valproic_Acid
+
+do
+
+data_source=/ngs-data/data/hecatos/Hepatic/${drug}/TotalRNA/concatenated
+
+mkdir /ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/${drug}
+cd /ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/${drug}
+
+for i in ${data_source}/*.fastq.gz;
+do
+sample=`basename $i`
+if [ ! -d "${sample:0:13}_quant" ]; then
+echo "Processing sample ${sample:0:13}"
+/share/tools/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${human_transcriptome} \
+						-l A \
+						-1 ${data_source}/${sample:0:13}_R1.fastq.gz \
+						-2 ${data_source}/${sample:0:13}_R2.fastq.gz \
+						-p 8 --validateMappings \
+						-o ${sample:0:13}_quant
+fi
+done
+
+done
+
+# run Salmon v1.5.2w with Homo_sapiens.GRCh38.cdna.all refference release 104 for 5-FU
+data_source=/ngs-data/data/hecatos/Hepatic/5-FU/mRNA/concatenated
+
+mkdir /ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/5-FU
+cd /ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/5-FU
+
+for i in ${data_source}/*.fastq.gz;
+do
+sample=`basename $i`
+if [ ! -d "${sample:0:13}_quant" ]; then
+echo "Processing sample ${sample:0:13}"
+/share/tools/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${human_transcriptome} \
+						-l A \
+						-1 ${data_source}/${sample:0:13}_R1.fastq.gz \
+						-2 ${data_source}/${sample:0:13}_R2.fastq.gz \
+						-p 8 --validateMappings \
+						-o ${sample:0:13}_quant
+fi
+done
+
+# create tx2gene file for annotation ---------------------------------
+cd /ngs-data/analysis/hecatos/NhanNguyen/Salmon_RNAseq/
+
+zcat Homo_sapiens.GRCh38.cdna.all.fa.gz | grep '>' | cut -d ' ' -f1,4,7 > temp
+paste <(cut -d '>' -f2 temp | cut -d ' ' -f1) <(cut -d ' ' -f2 temp | cut -d ':' -f2) <(cut -d ' ' -f3 temp | cut -d ':' -f2) >> tx2gene.txt
+rm temp
+
