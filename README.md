@@ -6,6 +6,7 @@ This repository for the multi-omics data analysis including MeDIP-seq, RNA-seq, 
 ## Instructions
 - The **data** folder stores all the needed data information
 - The **outcome** folder stores all the results of the data analysis
+- The **prepare_samples** folder contains bash script to processing raw data (.fastq files) before run the analysis code in R
 - The **RNAseq_RODAF** is the script to run the RNAseq data using the [R-ODAF](https://doi.org/10.1016/j.yrtph.2022.105143) 
 - The **R_codes** is the R scripts to analyse the proteomics data (for previous work)
 - The **Rif_data_analysis** is the R script each omics data (MeDIP-seq, RNA-seq, and proteomics) - single omics anlysis
