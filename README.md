@@ -1,7 +1,7 @@
 # Rifampicin_omics_integration
 
 ## Description
-This repository for the multi-omics data analysis including MeDIP-seq, RNA-seq, and proteomics, for Chapter 4 of my thesis.
+This repository for the multi-omics data analysis including MeDIP-seq, RNA-seq, and proteomics, for Chapter 4 of my [PhD thesis](http://doi.org/10.26481/dis.20221122tn).
 
 ## Instructions
 - The **data** folder stores all the needed data information
